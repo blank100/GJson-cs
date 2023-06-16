@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\GJson\GJson.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Buffer">
+        <HintPath>..\GJson\libs\Buffer.dll</HintPath>
+      </Reference>
+      <Reference Include="GNumerics">
+        <HintPath>..\GJson\libs\GNumerics.dll</HintPath>
+      </Reference>
+      <Reference Include="GText">
+        <HintPath>..\GJson\libs\GText.dll</HintPath>
+      </Reference>
+      <Reference Include="Recycle">
+        <HintPath>..\GJson\libs\Recycle.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
+      <PackageReference Include="MessagePack" Version="2.6.100-alpha" />
+      <PackageReference Include="xunit.assert" Version="2.4.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Resources\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+</Project>
