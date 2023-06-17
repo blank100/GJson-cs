@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Gal.Core.GJson
 {
@@ -23,6 +24,7 @@ namespace Gal.Core.GJson
     /// </summary>
     public static class SystemObjectToJsonString
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToJsonString(this object self, bool withFormat = false, string numberFormat = null) {
             RefWriter<char> writer = new();
             try {
@@ -38,7 +40,7 @@ namespace Gal.Core.GJson
             switch (value) {
                 case string stringValue:
                     writer.Write('"');
-                    TextEscape.Exec(stringValue, ref writer, GJsonObject.defaultEscapeTable, false);
+                    TextEscape.Exec(stringValue, ref writer);
                     writer.Write('"');
                     break;
                 case int intValue:
@@ -132,7 +134,7 @@ namespace Gal.Core.GJson
                     var e = itr.Entry;
 
                     writer.Write('"');
-                    TextEscape.Exec(e.Key.ToString(), ref writer, GJsonObject.defaultEscapeTable, false);
+                    TextEscape.Exec(e.Key.ToString(), ref writer);
                     writer.Write('"', ':');
                     Object2Json(e.Value, ref writer, numberFormat, indent, indentLevel);
                     writer.Write(',');
@@ -148,7 +150,7 @@ namespace Gal.Core.GJson
                     var e = itr.Entry;
 
                     writer.Write(childIndent + '"');
-                    TextEscape.Exec(e.Key.ToString(), ref writer, GJsonObject.defaultEscapeTable, false);
+                    TextEscape.Exec(e.Key.ToString(), ref writer);
                     writer.Write('"', ':');
                     Object2Json(e.Value, ref writer, numberFormat, childIndent, nextIndentLevel);
                     writer.Write(',', '\n');

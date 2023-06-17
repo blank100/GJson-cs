@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Gal.Core.GJson
 {
@@ -8,16 +10,12 @@ namespace Gal.Core.GJson
     /// <para>author gouanlin</para>
     public partial class GJsonObject
     {
-        public static readonly Dictionary<char, string> defaultEscapeTable = new() {
-            ['\\'] = "\\\\"
-            , ['\"'] = "\\\""
-            , ['\n'] = "\\n"
-            , ['\r'] = "\\r"
-            , ['\t'] = "\\t"
-            , ['\b'] = "\\b"
-            , ['\f'] = "\\f"
-        };
+        private static readonly ReadOnlyMemory<char> m_Null = "null".AsMemory();
+        private static readonly ReadOnlyMemory<char> m_True = "true".AsMemory();
+        private static readonly ReadOnlyMemory<char> m_False = "false".AsMemory();
+        private static readonly ReadOnlyMemory<char> m_Undefined = "undefined".AsMemory();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString() {
             RefWriter<char> buffer = new(stackalloc char[256]);
             try {
@@ -28,6 +26,7 @@ namespace Gal.Core.GJson
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string ToString(bool format, string numberFormat = null) {
             RefWriter<char> buffer = new(stackalloc char[256]);
             try {
@@ -42,10 +41,10 @@ namespace Gal.Core.GJson
         private void BuildJsonString(ref RefWriter<char> buffer, string numberFormat) {
             switch (type) {
                 case GJsonType.String:
-                    if (m_String == null) buffer.Write("null");
+                    if (m_String == null) buffer.Write(m_Null);
                     else {
                         buffer.Write('"');
-                        TextEscape.Exec(m_String, ref buffer, defaultEscapeTable, false);
+                        TextEscape.Exec(m_String, ref buffer);
                         buffer.Write('"');
                     }
                     break;
@@ -62,7 +61,7 @@ namespace Gal.Core.GJson
                     buffer.Write('{');
                     foreach (var (key, value) in m_Dict) {
                         buffer.Write('"');
-                        TextEscape.Exec(key, ref buffer, defaultEscapeTable, false);
+                        TextEscape.Exec(key, ref buffer);
                         buffer.Write('"', ':');
                         value.BuildJsonString(ref buffer, numberFormat);
                         buffer.Write(',');
@@ -87,13 +86,13 @@ namespace Gal.Core.GJson
                     break;
                 }
                 case GJsonType.Boolean:
-                    buffer.Write(m_Long != 0 ? "true" : "false");
+                    buffer.Write(m_Long != 0 ? m_True : m_False);
                     break;
                 case GJsonType.Null:
-                    buffer.Write("null");
+                    buffer.Write(m_Null);
                     break;
                 default:
-                    buffer.Write("undefined");
+                    buffer.Write(m_Undefined);
                     break;
             }
         }
@@ -104,10 +103,10 @@ namespace Gal.Core.GJson
         private void BuildJsonString(ref RefWriter<char> buffer, string indent, int indentLevel, string numberFormat = null) {
             switch (type) {
                 case GJsonType.String:
-                    if (m_String == null) buffer.Write("null");
+                    if (m_String == null) buffer.Write(m_Null);
                     else {
                         buffer.Write('"');
-                        TextEscape.Exec(m_String, ref buffer, defaultEscapeTable, false);
+                        TextEscape.Exec(m_String, ref buffer);
                         buffer.Write('"');
                     }
                     break;
@@ -129,7 +128,7 @@ namespace Gal.Core.GJson
                         if (value.type == GJsonType.Null) continue;
                         buffer.Write(childIndent);
                         buffer.Write('"');
-                        TextEscape.Exec(key, ref buffer, defaultEscapeTable, false);
+                        TextEscape.Exec(key, ref buffer);
                         buffer.Write('"', ':');
                         value.BuildJsonString(ref buffer, childIndent, nextIndentLevel);
                         buffer.Write(',', '\n');
@@ -162,13 +161,13 @@ namespace Gal.Core.GJson
                     break;
                 }
                 case GJsonType.Boolean:
-                    buffer.Write(m_Long != 0 ? "true" : "false");
+                    buffer.Write(m_Long != 0 ? m_True : m_False);
                     break;
                 case GJsonType.Null:
-                    buffer.Write("null");
+                    buffer.Write(m_Null);
                     break;
                 default:
-                    buffer.Write("undefined");
+                    buffer.Write(m_Undefined);
                     break;
             }
         }

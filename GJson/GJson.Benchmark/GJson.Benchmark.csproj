@@ -36,7 +36,9 @@
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
+      <PackageReference Include="LitJson" Version="0.18.0" />
       <PackageReference Include="MessagePack" Version="2.6.100-alpha" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="xunit.assert" Version="2.4.1" />
     </ItemGroup>
     <ItemGroup>
