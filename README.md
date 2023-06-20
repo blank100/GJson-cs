@@ -1,6 +1,13 @@
 # GJson-cs
 Json
 
+BenchmarkDotNet=v0.13.5, OS=Windows 10 (10.0.19042.2006/20H2/October2020Update)
+11th Gen Intel Core i7-11700KF 3.60GHz, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.311
+  [Host]     : .NET 6.0.16 (6.0.1623.17311), X64 RyuJIT AVX2
+  DefaultJob : .NET 6.0.16 (6.0.1623.17311), X64 RyuJIT AVX2
+
+
 |                        Method |             Mean |           Error |          StdDev | Ratio | RatioSD |       Gen0 |       Gen1 |       Gen2 |   Allocated | Alloc Ratio |
 |------------------------------ |-----------------:|----------------:|----------------:|------:|--------:|-----------:|-----------:|-----------:|------------:|------------:|
 |            GJson_ToJsonObject | 109,633,269.3 ns |   707,701.08 ns |   661,984.02 ns | 1.000 |    0.00 | 27800.0000 | 13800.0000 |          - | 232699931 B |        1.00 |
