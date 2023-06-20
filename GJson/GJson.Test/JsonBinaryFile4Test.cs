@@ -9,7 +9,7 @@ public class JsonBinaryFile4Test {
 	[Fact]
 	public void File4Test() {
 		var jsonString = File.ReadAllText("Resources/smart-quotes.json");
-		var json       = GJsonDecoder.Exec(jsonString);
+		var json       = GJsonObject.Decode(jsonString);
 			
 		RefWriter<byte> writer = new(jsonString.Length);
 			

@@ -9,7 +9,7 @@ public class JsonBinaryFile3Test {
 	[Fact]
 	public void File3Test() {
 		var jsonString = File.ReadAllText("Resources/basic-huge.json");
-		var json       = GJsonDecoder.Exec(jsonString);
+		var json       = GJsonObject.Decode(jsonString);
 			
 		RefWriter<byte> writer = new(jsonString.Length);
 			

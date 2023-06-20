@@ -9,15 +9,15 @@ namespace GalCoreUnitTest.Classes {
 		[Fact]
 		public void DecodeFile3_Text() {
 			var jsonString = File.ReadAllText("Resources/basic-huge.json");
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Assert.Equal(jsonString, json.ToString());
 		}
 
-		[Fact]
-		public void DecodeFile3_Unsafe() {
-			var jsonString = File.ReadAllText("Resources/basic-huge.json");
-			var json       = GJsonDecoder.ExecUnsafe(jsonString);
-			Assert.Equal(jsonString, json.ToString());
-		}
+		// [Fact]
+		// public void DecodeFile3_Unsafe() {
+		// 	var jsonString = File.ReadAllText("Resources/basic-huge.json");
+		// 	var json       = GJsonDecoder.ExecUnsafe(jsonString);
+		// 	Assert.Equal(jsonString, json.ToString());
+		// }
 	}
 }

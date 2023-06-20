@@ -3,12 +3,12 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=E_003A_005Cgitee_005CGJson_002Dcs_005CGJson_005CGJson_005Clibs_005CGNumerics_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=E_003A_005Cgitee_005CGJson_002Dcs_005CGJson_005CGJson_005Clibs_005CGText_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=E_003A_005Cgitee_005CGJson_002Dcs_005CGJson_005CGJson_005Clibs_005CRecycle_002Edll/@EntryIndexedValue">True</s:Boolean>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=11c27722_002D4875_002D45da_002D8306_002Da2025c813e39/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;GJson.Test&amp;gt; #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=11c27722_002D4875_002D45da_002D8306_002Da2025c813e39/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;GJson.Test&amp;gt; #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="E:\gitee\GJson-cs\GJson\GJson.Test" Presentation="&amp;lt;GJson.Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=adec4077_002Dec53_002D4f89_002Da09e_002Da4dbec6069df/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;GJson.Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="E:\gitee\GJson-cs\GJson\GJson.Test" Presentation="&amp;lt;GJson.Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ddc59ef2_002Dc942_002D4b79_002Db1bf_002D8d8dc89db7b4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;GJson.Test&amp;gt; #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ddc59ef2_002Dc942_002D4b79_002Db1bf_002D8d8dc89db7b4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;GJson.Test&amp;gt; #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="E:\gitee\GJson-cs\GJson\GJson.Test" Presentation="&amp;lt;GJson.Test&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

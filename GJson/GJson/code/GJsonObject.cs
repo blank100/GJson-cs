@@ -14,7 +14,7 @@ namespace Gal.Core.GJson
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get;
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private set;
+            internal set;
         } = GJsonType.Null;
 
         internal Dictionary<string, GJsonObject> m_Dict;
@@ -58,21 +58,170 @@ namespace Gal.Core.GJson
             get => type == GJsonType.Null;
         }
 
-        internal static readonly SafePool<GJsonObject> m_Pool = new(() => new(), t => t.Clear(), null, 256);
-
-        internal static readonly SafePool<Dictionary<string, GJsonObject>> m_DictPool = new(() => new(), t => t.Clear(), null, 32);
-
-        internal static readonly SafePool<List<GJsonObject>> m_ListPool = new(() => new(), t => t.Clear(), null, 32);
-
-        private GJsonObject() { }
-
         public int count {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => type switch {
                 GJsonType.Object => m_Dict.Count
                 , GJsonType.Array => m_List.Count
+                , GJsonType.Null => 0
                 , _ => throw new("不是 JsonObject/JsonArray 对象,不能访问元素数量")
             };
+        }
+
+        public GJsonObject() { }
+
+        public GJsonObject(GJsonType type) {
+            this.type = type;
+            switch (type) {
+                case GJsonType.Object:
+                    m_Dict = new();
+                    break;
+                case GJsonType.Array:
+                    m_List = new();
+                    break;
+            }
+        }
+
+        public GJsonObject(double value) {
+            type = GJsonType.Double;
+            m_Double = value;
+        }
+
+        public GJsonObject(long value) {
+            type = GJsonType.Long;
+            m_Long = value;
+        }
+
+        public GJsonObject(string value) {
+            type = GJsonType.String;
+            m_String = value;
+        }
+
+        public GJsonObject(bool value) {
+            type = GJsonType.Boolean;
+            m_Long = value ? 1L : 0L;
+        }
+
+        public GJsonObject(Dictionary<string, object> dictionary) {
+            type = GJsonType.Object;
+            m_Dict = new();
+            foreach (var (k, v) in dictionary) m_Dict.Add(k, (GJsonObject)v);
+        }
+
+        public GJsonObject(Dictionary<string, GJsonObject> dictionary) {
+            type = GJsonType.Object;
+            m_Dict = new();
+            foreach (var (k, v) in dictionary) m_Dict.Add(k, v);
+        }
+
+        public GJsonObject(IEnumerable<object> list) {
+            type = GJsonType.Array;
+            m_List = new();
+            foreach (var v in list) m_List.Add((GJsonObject)v);
+        }
+
+        public GJsonObject(IEnumerable<GJsonObject> list) {
+            type = GJsonType.Array;
+            m_List = new();
+            m_List.AddRange(list);
+        }
+
+        public GJsonObject(ReadOnlySpan<object> span) {
+            type = GJsonType.Array;
+            m_List = new();
+            foreach (var v in span) m_List.Add((GJsonObject)v);
+        }
+
+        public GJsonObject(ReadOnlySpan<GJsonObject> span) {
+            type = GJsonType.Array;
+            m_List = new();
+            foreach (var v in span) m_List.Add(v);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(double value) {
+            Clear();
+            type = GJsonType.Double;
+            m_Double = value;
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(long value) {
+            Clear();
+            type = GJsonType.Long;
+            m_Long = value;
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(string value) {
+            Clear();
+            type = GJsonType.String;
+            m_String = value;
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(bool value) {
+            Clear();
+            type = GJsonType.Boolean;
+            m_Long = value ? 1L : 0L;
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(Dictionary<string, object> dictionary) {
+            Clear();
+            type = GJsonType.Object;
+            m_Dict = new();
+            foreach (var (k, v) in dictionary) m_Dict.Add(k, (GJsonObject)v);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(Dictionary<string, GJsonObject> dictionary) {
+            Clear();
+            type = GJsonType.Object;
+            m_Dict = new();
+            foreach (var (k, v) in dictionary) m_Dict.Add(k, v);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(IEnumerable<object> list) {
+            Clear();
+            type = GJsonType.Array;
+            m_List = new();
+            foreach (var v in list) m_List.Add((GJsonObject)v);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(IEnumerable<GJsonObject> list) {
+            Clear();
+            type = GJsonType.Array;
+            m_List = new();
+            m_List.AddRange(list);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(ReadOnlySpan<object> list) {
+            Clear();
+            type = GJsonType.Array;
+            m_List = new();
+            foreach (var v in list) m_List.Add((GJsonObject)v);
+            return this;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GJsonObject Set(ReadOnlySpan<GJsonObject> list) {
+            Clear();
+            type = GJsonType.Array;
+            m_List = new();
+            foreach (var v in list) m_List.Add(v);
+            return this;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -84,6 +233,7 @@ namespace Gal.Core.GJson
         public GJsonObject this[string key] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => m_Dict.TryGetValue(key, out var t) ? t : null;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set {
                 if (type == GJsonType.Object) {
                     if (m_Dict.TryGetValue(key, out var oldValue)) {
@@ -98,7 +248,7 @@ namespace Gal.Core.GJson
                 } else if (type == GJsonType.Null) {
                     if (value == null) return;
                     type = GJsonType.Object;
-                    m_Dict = m_DictPool.Get();
+                    m_Dict = new();
                 } else {
                     if (value != null) throw new("不是 JsonObject ,不能通过 key 设置属性");
                 }
@@ -110,8 +260,9 @@ namespace Gal.Core.GJson
         public GJsonObject this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => m_List[index];
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set {
-                var t = value ?? Get();
+                var t = value ?? new();
                 switch (type) {
                     case GJsonType.Array when index < m_List.Count:
                         m_List[index]?.Dispose();
@@ -123,8 +274,7 @@ namespace Gal.Core.GJson
                     case GJsonType.Array: throw new($"类型为 JsonArray 的索引器({nameof(index)}) 不能大于 {nameof(count)}");
                     case GJsonType.Null when index == 0:
                         type = GJsonType.Array;
-                        m_List = m_ListPool.Get();
-                        m_List.Add(t);
+                        m_List = new() { t };
                         break;
                     case GJsonType.Null: throw new("未初始化的 JsonArray ,只能设置 index 为 0 的元素值");
                     default: throw new("不是 JsonArray ,不能通过 index 设置元素值");
@@ -132,38 +282,36 @@ namespace Gal.Core.GJson
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(GJsonObject item) {
             switch (type) {
                 case GJsonType.Array:
-                    m_List.Add(item ?? Get());
+                    m_List.Add(item ?? new());
                     break;
                 case GJsonType.Null:
                     type = GJsonType.Array;
-                    m_List = m_ListPool.Get();
-                    m_List.Add(item ?? Get());
+                    m_List = new() { item ?? new() };
                     break;
                 default: throw new($"不是 JsonArray ,不能通过 {nameof(Add)}(GJsonObject item) 添加元素值");
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(string key, GJsonObject value) {
             switch (type) {
                 case GJsonType.Object:
-                    m_Dict.Add(key, value ?? Get());
+                    m_Dict.Add(key, value ?? new());
                     break;
                 case GJsonType.Null:
                     type = GJsonType.Object;
-                    m_Dict = m_DictPool.Get();
-                    m_Dict.Add(key, value ?? Get());
+                    m_Dict = new() { { key, value ?? new() } };
                     break;
                 default: throw new($"不是 JsonObject ,不能通过 {nameof(Add)}(string key, GJsonObject value) 添加属性");
             }
         }
 
-        public bool HasChild(string key) {
-            if (type == GJsonType.Object) return m_Dict.ContainsKey(key);
-            throw new($"不是 JsonObject ,不能通过 {nameof(HasChild)}(string key) 判断是否有指定的子节点");
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasChild(string key) { return type switch { GJsonType.Object => m_Dict.ContainsKey(key), GJsonType.Null => false, _ => throw new($"不是 JsonObject ,不能通过 {nameof(HasChild)}(string key) 判断是否有指定的子节点") }; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryGetChild(string key, out GJsonObject value) => type == GJsonType.Object ? m_Dict.TryGetValue(key, out value) : throw new($"不是 JsonObject ,不能通过 {nameof(TryGetChild)}(string key,out GJsonObject value) 获取值");
@@ -172,16 +320,12 @@ namespace Gal.Core.GJson
             type = GJsonType.Null;
 
             if (m_Dict != null) {
-                foreach (var itr in m_Dict) itr.Value.Dispose();
                 m_Dict.Clear();
-                m_DictPool.Put(m_Dict);
                 m_Dict = null;
             }
 
             if (m_List != null) {
-                foreach (var itr in m_List) itr.Dispose();
                 m_List.Clear();
-                m_ListPool.Put(m_List);
                 m_List = null;
             }
 
@@ -193,55 +337,18 @@ namespace Gal.Core.GJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Dispose() => m_Pool.Put(this);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GJsonObject Get(GJsonType type = GJsonType.Null) {
-            var t = m_Pool.Get();
-            t.type = type;
-            switch (t.type) {
-                case GJsonType.Object:
-                    t.m_Dict = m_DictPool.Get();
-                    break;
-                case GJsonType.Array:
-                    t.m_List = m_ListPool.Get();
-                    break;
-            }
-
+        public GJsonObject Clone() {
+            GJsonObject t = new(type);
+            t.m_Dict = m_Dict;
+            t.m_List = m_List;
+            t.m_Long = m_Long;
+            t.m_Double = m_Double;
+            t.m_String = m_String;
             return t;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GJsonObject Get(double value) {
-            var t = m_Pool.Get();
-            t.type = GJsonType.Double;
-            t.m_Double = value;
-            return t;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GJsonObject Get(long value) {
-            var t = m_Pool.Get();
-            t.type = GJsonType.Long;
-            t.m_Long = value;
-            return t;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GJsonObject Get(string value) {
-            var t = m_Pool.Get();
-            t.type = GJsonType.String;
-            t.m_String = value;
-            return t;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GJsonObject Get(bool value) {
-            var t = m_Pool.Get();
-            t.type = GJsonType.Boolean;
-            t.m_Long = value ? 1L : 0L;
-            return t;
-        }
+        public void Dispose() => Clear();
 
         /// <summary>
         /// 非隐式转换,因为可能会存在数据截断
@@ -272,39 +379,21 @@ namespace Gal.Core.GJson
         public static implicit operator bool(GJsonObject value) => value == null ? default : value.type == GJsonType.Boolean ? value.m_Long != 0 : throw new($"{value.type} 的 json 对象不能转换为 {nameof(Boolean)}");
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator GJsonObject(int value) {
-            var t = Get(GJsonType.Long);
-            t.m_Long = value;
-            return t;
-        }
+        public static implicit operator GJsonObject(int value) => new(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator GJsonObject(long value) {
-            var t = Get(GJsonType.Long);
-            t.m_Long = value;
-            return t;
-        }
+        public static implicit operator GJsonObject(long value) => new(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator GJsonObject(double value) {
-            var t = Get(GJsonType.Double);
-            t.m_Double = value;
-            return t;
-        }
+        public static implicit operator GJsonObject(double value) => new(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator GJsonObject(string value) {
-            if (value == null) return Get(GJsonType.Null);
-            var t = Get(GJsonType.String);
-            t.m_String = value;
-            return t;
+            if (value == null) return new(GJsonType.Null);
+            return new(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator GJsonObject(bool value) {
-            var t = Get(GJsonType.Boolean);
-            t.m_Long = value ? 1 : 0;
-            return t;
-        }
+        public static implicit operator GJsonObject(bool value) => new(value);
     }
 }

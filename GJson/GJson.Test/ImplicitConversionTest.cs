@@ -20,7 +20,7 @@ namespace Json.Test {
 		[Fact]
 		public static void ChildIsNullString() {
 			string      text = null;
-			var json = GJsonObject.Get(GJsonType.Object);
+			GJsonObject json = new();
 			json["child"] = text;
 			Assert.True(json["child"].isNull);
 			Assert.Equal("{\"child\":null}", json.ToString());
@@ -28,7 +28,7 @@ namespace Json.Test {
 
 		[Fact]
 		public static void ChildIsNull() {
-			var json = GJsonObject.Get(GJsonType.Object);
+			GJsonObject json = new();
 
 			json["child"] = null;
 			Assert.False(json.HasChild("child"));
@@ -45,7 +45,7 @@ namespace Json.Test {
 
 		[Fact]
 		public static void ChildIsNumber() {
-			var json = GJsonObject.Get(GJsonType.Object);
+			GJsonObject json = new();
 
 			json["child"] = 1;
 			Assert.Equal(1, json["child"]);
@@ -66,7 +66,7 @@ namespace Json.Test {
 
 		[Fact]
 		public static void ChildIsBoolean() {
-			var json = GJsonObject.Get(GJsonType.Object);
+			GJsonObject json = new();
 
 			json["child"] = true;
 			Assert.True(json["child"]);

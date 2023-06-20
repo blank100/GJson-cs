@@ -9,7 +9,7 @@ public class JsonBinaryFile1Test {
 	[Fact]
 	public void File1Test() {
 		var jsonString = File.ReadAllText("Resources/allow-newlines-inside-strings.json");
-		var json       = GJsonDecoder.Exec(jsonString);
+		var json       = GJsonObject.Decode(jsonString);
 			
 		RefWriter<byte> writer = new(jsonString.Length);
 			

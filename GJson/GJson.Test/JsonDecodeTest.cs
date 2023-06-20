@@ -24,24 +24,24 @@ namespace Json.Test {
 		[Fact]
 		public static void NullTest() {
 			var         text = "null";
-			var json = GJsonDecoder.Exec(text);
+			var json = GJsonObject.Decode(text);
 			Assert.Equal(null,json);
 		}
 		
 		[Fact]
 		public static void BinaryTest() {
-			var json = GJsonObject.Get();
+			GJsonObject json = new();
 			json["key1"]         = "key1value";
 			json["key2"]         = 15422;
-			json["Array"]        = GJsonObject.Get();
+			json["Array"]        = new();
 			json["Array"][0]     = 1;
 			json["Array"][1]     = "text";
 			json["Array"][2]     = false;
 			json["Array"][3]     = true;
-			json["Array"][4]     = GJsonObject.Get(GJsonType.Null);
+			json["Array"][4]     = new();
 			json["Array"][5]     = null;
 			json["Array"][6]     = 3.1415926;
-			json["Array2"]       = GJsonObject.Get();
+			json["Array2"]       = new();
 			json["Array2"]["kk"] = 123456;
 			json["Array2"]["a"]  = 123456;
 			json["Array2"]["b"]  = 123456;
@@ -58,7 +58,7 @@ namespace Json.Test {
 		public static void Decode1() {
 			var path       = Path.Combine(Environment.CurrentDirectory, JSON1);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -72,7 +72,7 @@ namespace Json.Test {
 		public static void Decode2() {
 			var path       = Path.Combine(Environment.CurrentDirectory, JSON2);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -86,7 +86,7 @@ namespace Json.Test {
 		public static void DecodeIpAddress() {
 			var path       = Path.Combine(Environment.CurrentDirectory, IP_ADDRESS);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -100,7 +100,7 @@ namespace Json.Test {
 		public static void DecodeHeaders() {
 			var path       = Path.Combine(Environment.CurrentDirectory, Headers);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -114,7 +114,7 @@ namespace Json.Test {
 		public static void DecodeEcho() {
 			var path       = Path.Combine(Environment.CurrentDirectory, Echo);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -128,7 +128,7 @@ namespace Json.Test {
 		public static void DecodeDateTime() {
 			var path       = Path.Combine(Environment.CurrentDirectory, DateTime);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -142,7 +142,7 @@ namespace Json.Test {
 		public static void DecodeValidation() {
 			var path       = Path.Combine(Environment.CurrentDirectory, Validation);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -156,7 +156,7 @@ namespace Json.Test {
 		public static void DecodeAllowNewLinesInsideStrings() {
 			var path       = Path.Combine(Environment.CurrentDirectory, AllowNewLinesInsideStrings);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -170,7 +170,7 @@ namespace Json.Test {
 		public static void DecodeBasic() {
 			var path       = Path.Combine(Environment.CurrentDirectory, Basic);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -184,7 +184,7 @@ namespace Json.Test {
 		public static void DecodeBasicHuge() {
 			var path       = Path.Combine(Environment.CurrentDirectory, BasicHuge);
 			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.Exec(jsonString);
+			var json       = GJsonObject.Decode(jsonString);
 			Console.Write(json.ToString(true));
 
 			RefWriter<byte> writer = new(1024);
@@ -194,18 +194,18 @@ namespace Json.Test {
 			Assert.Equal(json, resultJson);
 		}
 		
-		[Fact]
-		public static void DecodeSmartQuotes() {
-			var path       = Path.Combine(Environment.CurrentDirectory, SmartQuotes);
-			var jsonString = File.ReadAllText(path);
-			var json       = GJsonDecoder.ExecUnsafe(jsonString);
-			Console.Write(json.ToString(true));
-
-			RefWriter<byte> writer = new(1024);
-			GJsonBinary.Encode(json, ref writer);
-			RefReader<byte> reader     = new(writer.writtenSpan);
-			var             resultJson = GJsonBinary.Decode(ref reader);
-			Assert.Equal(json, resultJson);
-		}
+		// [Fact]
+		// public static void DecodeSmartQuotes() {
+		// 	var path       = Path.Combine(Environment.CurrentDirectory, SmartQuotes);
+		// 	var jsonString = File.ReadAllText(path);
+		// 	var json       = GJsonDecoder.ExecUnsafe(jsonString);
+		// 	Console.Write(json.ToString(true));
+		//
+		// 	RefWriter<byte> writer = new(1024);
+		// 	GJsonBinary.Encode(json, ref writer);
+		// 	RefReader<byte> reader     = new(writer.writtenSpan);
+		// 	var             resultJson = GJsonBinary.Decode(ref reader);
+		// 	Assert.Equal(json, resultJson);
+		// }
 	}
 }

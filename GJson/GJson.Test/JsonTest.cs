@@ -7,7 +7,7 @@ using Xunit;
 namespace GalCoreUnitTest.Classes {
 	public class JsonTest {
 		public void NullTest() {
-			var data         = GJsonObject.Get();
+			GJsonObject data = new();
 			var         getNullValue = data["key"];
 			data["key"] = null;
 			
@@ -17,7 +17,7 @@ namespace GalCoreUnitTest.Classes {
 		
 		[Fact]
 		public void AsArrayTest() {
-			var data = GJsonObject.Get();
+			GJsonObject data = new();
 			data.Add(1);
 			data.Add(2);
 			data.Add(3);
@@ -77,10 +77,10 @@ namespace GalCoreUnitTest.Classes {
 
 		[Fact]
 		public void AsObjectTest() {
-			var data = GJsonObject.Get();
+			GJsonObject data = new();
 
 			data["alignment"]     = "left";
-			data["font"]          = GJsonObject.Get();
+			data["font"]          = new();
 			data["font"]["name"]  = "Arial";
 			data["font"]["style"] = "italic";
 			data["font"]["size"]  = 10;

@@ -32,7 +32,7 @@ namespace Gal.Core.GJson
 			ICollection v => CollectionToJson(v),
 			long v => v,
 			bool v => v,
-			null => GJsonObject.Get(GJsonType.Null),
+			null => new(GJsonType.Null),
 			uint v => v,
 			short v => v,
 			ushort v => v,
@@ -44,7 +44,7 @@ namespace Gal.Core.GJson
 		};
 
 		private static GJsonObject DictionaryToJson(IDictionary value) {
-			var result = GJsonObject.Get(GJsonType.Object);
+			GJsonObject result = new(GJsonType.Object);
 			if (value.Count == 0) return result;
 
 			var itr = value.GetEnumerator();
@@ -58,7 +58,7 @@ namespace Gal.Core.GJson
 		}
 
 		private static GJsonObject CollectionToJson(ICollection value) {
-			var result = GJsonObject.Get(GJsonType.Array);
+			GJsonObject result = new(GJsonType.Array);
 			if (value.Count == 0) return result;
 
 			var itr = value.GetEnumerator();

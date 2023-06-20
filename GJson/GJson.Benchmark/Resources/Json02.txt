@@ -9,7 +9,7 @@
   "id": 2,
   "first_name": "Giavani",
   "last_name": "Frediani",
-  "email": "gfrediani1@senate.gov",
+  "email": "gfrediani1@s\"enate.gov",
   "gender": "Male",
   "ip_address": "229.179.4.212"
 }, {
