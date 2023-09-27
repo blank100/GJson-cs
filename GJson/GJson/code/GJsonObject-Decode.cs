@@ -8,7 +8,7 @@ namespace Gal.Core.GJson
     public partial class GJsonObject
     {
         public static unsafe GJsonObject Decode(string jsonString) {
-             GJsonObject root = null;
+            GJsonObject root = null;
             fixed (char* start = jsonString) {
                 using Stack<GJsonObject> stack = new();
                 using Stack<string> attrNameStack = new();
@@ -242,7 +242,7 @@ namespace Gal.Core.GJson
             public void Push(T item) {
                 if (m_Depth == m_Array.Length) {
                     var newArray = ArrayPool<T>.Shared.Rent(Math.Max(DEFAULT_CAPACITY, 2 * m_Array.Length));
-                    Buffer.BlockCopy(m_Array, 0, newArray, 0, m_Array.Length);
+                    Buffer.BlockCopy(m_Array, 0, newArray, 0, m_Depth);
                     m_Array = newArray;
                 }
 

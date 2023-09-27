@@ -38,19 +38,4 @@
     <ItemGroup>
       <ProjectReference Include="..\GJson\GJson.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Buffer">
-        <HintPath>..\GJson\libs\Buffer.dll</HintPath>
-      </Reference>
-      <Reference Include="GNumerics">
-        <HintPath>..\GJson\libs\GNumerics.dll</HintPath>
-      </Reference>
-      <Reference Include="GText">
-        <HintPath>..\GJson\libs\GText.dll</HintPath>
-      </Reference>
-      <Reference Include="Recycle">
-        <HintPath>..\GJson\libs\Recycle.dll</HintPath>
-      </Reference>
-    </ItemGroup>
 </Project>

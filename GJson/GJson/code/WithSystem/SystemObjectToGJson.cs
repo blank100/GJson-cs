@@ -50,9 +50,8 @@ namespace Gal.Core.GJson
 			var itr = value.GetEnumerator();
 			while (itr.MoveNext()) {
 				var e = itr.Entry;
-				if (e.Key is string s) {
-					result.Add(s, ToJson(e.Value));
-				} else throw new(" JsonObject 的 key 必须时 string ");
+				if (e.Key is string s) result.Add(s, ToJson(e.Value));
+				 else throw new(" JsonObject 的 key 必须时 string ");
 			}
 			return result;
 		}
