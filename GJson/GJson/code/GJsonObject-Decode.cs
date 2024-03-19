@@ -233,7 +233,7 @@ namespace Gal.Core.GJson
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public T Peek(int i = 0) {
                 Debug.Assert(m_Depth > 0, "Is empty");
-                Debug.Assert(i > 0, $"Parameter 'i' cannot be negative, i:{i}");
+                Debug.Assert(i >= 0, $"Parameter 'i' cannot be negative, i:{i}");
                 Debug.Assert(i < m_Depth, "Parameter 'I' cannot be greater than or equal to the depth of the stack");
                 return m_Array[m_Depth - 1 - i];
             }

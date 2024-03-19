@@ -5,6 +5,7 @@ namespace Gal.Core.GJson
 {
     /// <summary>
     /// 将C#原生对象转换为 Json 字符串
+    /// </summary>
     /// <para>author gouanlin</para>
     /// <para>IDictionary = JsonObject</para>
     /// <para>ICollection = JsonArray</para>
@@ -21,7 +22,6 @@ namespace Gal.Core.GJson
     /// <para>sbyte = number</para>
     /// <para>byte = number</para>
     /// <para>decimal = number</para>
-    /// </summary>
     public static class SystemObjectToJsonString
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
