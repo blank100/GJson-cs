@@ -7,15 +7,17 @@ namespace Gal.Core.GJson
 {
     public partial class GJsonObject
     {
-        public static unsafe GJsonObject Decode(string jsonString) {
+        public static GJsonObject Decode(string jsonString) => Decode(jsonString.AsSpan());
+
+        public static unsafe GJsonObject Decode(ReadOnlySpan<char> jsonChars) {
             GJsonObject root = null;
-            fixed (char* start = jsonString) {
-                using Stack<GJsonObject> stack = new();
+            fixed (char* start = jsonChars) {
+                 using Stack<GJsonObject> stack = new();
                 using Stack<string> attrNameStack = new();
                 var buffer = new RefWriter<char>(stackalloc char[256]);
 
                 var current = start;
-                var end = current + jsonString.Length;
+                var end = current + jsonChars.Length;
                 try {
                     while (current < end) {
                         var c = *current++;
@@ -184,12 +186,17 @@ namespace Gal.Core.GJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe GJsonObject DecodeNumber(ref char* current, char* end) {
             var s = current - 1;
+            var isDouble = false;
             while (current <= end) {
                 var c = *current++;
-                if (!char.IsDigit(c) && c is not ('+' or '-' or '.' or 'e' or 'E') && !char.IsWhiteSpace(c)) break;
+                if (char.IsDigit(c) || c is '+' or '-' or 'e' or 'E') continue;
+                if (c is not '.') break;
+                isDouble = true;
             }
 
-            var result = double.Parse(new ReadOnlySpan<char>(s, (int)(--current - s)));
+            var slice = new ReadOnlySpan<char>(s, (int)(--current - s));
+            if (!isDouble) return new(long.Parse(slice));
+            var result = double.Parse(slice);
             var longValue = (long)result;
             return Number.Equals(result, longValue) ? new(longValue) : new(result);
         }

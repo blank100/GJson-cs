@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Gal.Core.GJson
@@ -40,7 +41,7 @@ namespace Gal.Core.GJson
 
         public bool isNumber {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => type == GJsonType.Long || type == GJsonType.Double;
+            get => type is GJsonType.Long or GJsonType.Double;
         }
 
         public bool isBoolean {
@@ -233,12 +234,8 @@ namespace Gal.Core.GJson
         public GJsonObject this[string key] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get {
-                if (type != GJsonType.Object) throw new("不是 JsonObject ,不能通过 key 获取属性");
+                Debug.Assert(type == GJsonType.Object, "不是 JsonObject ,不能通过 key 获取属性");
                 return m_Dict.TryGetValue(key, out var t) ? t : null;
-                // if (m_Dict.TryGetValue(key, out var t)) return t;
-                // t = new(GJsonType.Null);
-                // m_Dict.Add(key, t);
-                // return t;
             }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set {
@@ -251,6 +248,7 @@ namespace Gal.Core.GJson
                     type = GJsonType.Object;
                     m_Dict = new();
                 } else throw new("不是 JsonObject ,不能通过 key 设置属性");
+
                 m_Dict[key] = value ?? new();
             }
         }
@@ -258,10 +256,9 @@ namespace Gal.Core.GJson
         public GJsonObject this[int index] {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get {
-                if (type != GJsonType.Array) throw new("不是 JsonArray ,不能通过 index 获取属性");
-                if (index >= 0 && index < m_List.Count) return m_List[index];
-                // if (index == m_List.Count) return m_List[index] = new(GJsonType.Null);
-                throw new($"类型为 JsonArray 的索引器({nameof(index)}) 不能大于 {nameof(count)}");
+                Debug.Assert(type == GJsonType.Array, "不是 JsonArray ,不能通过 index 获取属性");
+                Debug.Assert(index >= 0 && index < m_List.Count, $"类型为 JsonArray 的索引器({nameof(index)}) 不能大于 {nameof(count)}");
+                return m_List[index];
             }
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set {
@@ -302,6 +299,23 @@ namespace Gal.Core.GJson
                 default: throw new($"不是 JsonArray ,不能通过 {nameof(Add)}(GJsonObject item) 添加元素值");
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add(int index, GJsonObject item) {
+            switch (type) {
+                case GJsonType.Array:
+                    m_List.Insert(index, item ?? new());
+                    break;
+                case GJsonType.Null when index == 0:
+                    type = GJsonType.Array;
+                    m_List = new() { item ?? new() };
+                    break;
+            }
+            throw new($"不是 JsonArray ,不能通过 {nameof(Add)}(int index, GJsonObject item) 添加元素值");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Insert(int index, GJsonObject item) => Add(index, item);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(string key, GJsonObject value) {
@@ -367,8 +381,16 @@ namespace Gal.Core.GJson
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public GJsonObject Clone() {
             GJsonObject t = new(type);
-            t.m_Dict = m_Dict;
-            t.m_List = m_List;
+
+            if (m_Dict != null) {
+                t.m_Dict = new(m_Dict.Count);
+                foreach (var (k, v) in m_Dict) t.m_Dict.Add(k, v.Clone());
+            }
+            if (m_List != null) {
+                t.m_List = new(m_List.Count);
+                for (int i = 0, l = m_List.Count; i < l; i++) t.m_List[i] = m_List[i].Clone();
+            }
+
             t.m_Long = m_Long;
             t.m_Double = m_Double;
             t.m_String = m_String;
