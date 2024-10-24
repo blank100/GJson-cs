@@ -30,11 +30,8 @@ namespace Gal.Core
 
                 m_Length = value;
 
-                if (value > m_Buffer.Length) {
-                    GrowBuffer(value - m_Buffer.Length);
-                } else if (value < m_Position) {
-                    m_Position = value;
-                }
+                if (value > m_Buffer.Length) GrowBuffer(value - m_Buffer.Length);
+                else if (value < m_Position) m_Position = value;
             }
         }
 
@@ -370,7 +367,7 @@ namespace Gal.Core
         private void GenerateBuffer(int size) {
             var buffer = ArrayPool<T>.Shared.Rent(size);
             m_Buffer.AsSpan(0, Math.Min(m_Length, m_Buffer.Length)).CopyTo(buffer);
-            ArrayPool<T>.Shared.Return(m_Buffer);
+            ArrayPool<T>.Shared.Return(m_Buffer, !typeof(T).IsValueType);
             m_Buffer = buffer;
         }
 
@@ -409,7 +406,7 @@ namespace Gal.Core
             if (sizeHint == 0) return m_Buffer.AsSpan(m_Position);
             var availableSize = m_Buffer.Length - m_Position;
             if (availableSize < sizeHint) GrowBuffer(sizeHint - availableSize);
-            return m_Buffer.AsSpan(m_Position, sizeHint);
+            return m_Buffer.AsSpan(m_Position);
         }
 
         public Memory<T> GetMemory(int sizeHint = 0) {
@@ -418,7 +415,7 @@ namespace Gal.Core
             if (sizeHint == 0) return m_Buffer.AsMemory(m_Position);
             var availableSize = m_Buffer.Length - m_Position;
             if (availableSize < sizeHint) GrowBuffer(sizeHint - availableSize);
-            return m_Buffer.AsMemory(m_Position, sizeHint);
+            return m_Buffer.AsMemory(m_Position);
         }
 
         public void HintSize(int sizeHint) {
@@ -431,7 +428,7 @@ namespace Gal.Core
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose() {
-            ArrayPool<T>.Shared.Return(m_Buffer);
+            ArrayPool<T>.Shared.Return(m_Buffer, !typeof(T).IsValueType);
             m_Buffer = null;
         }
     }

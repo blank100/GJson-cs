@@ -3,20 +3,25 @@
 // </auto-generated>
 
 using System;
+using System.Globalization;
 
 namespace Gal.Core {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <para>author gouanlin</para>
     public static class StringToArray {
         public static void ToInt32Array(ReadOnlySpan<char> text, ref RefWriter<Int32> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? Int32.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? Int32.Parse(text[..i], NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? Int32.Parse(text) : default);
+            writer.Write(text.Length > 0 ? Int32.Parse(text, NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
         }
 
         public static Int32[] ToInt32Array(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<Int32> writer = new(stackalloc Int32[128]);
+            RefWriter<Int32> writer = new(stackalloc Int32[32]);
             try {
                 ToInt32Array(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -26,7 +31,7 @@ namespace Gal.Core {
         }
 
         public static void ToInt32Array2D(ReadOnlySpan<char> text, IWriter<Int32[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<Int32> writer1d = new(stackalloc Int32[128]);
+            RefWriter<Int32> writer1d = new(stackalloc Int32[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -51,7 +56,7 @@ namespace Gal.Core {
         }
 
         public static Int32[][] ToInt32Array2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<Int32[]> writer = new(128);
+            using Writer<Int32[]> writer = new(32);
             ToInt32Array2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }
@@ -59,14 +64,14 @@ namespace Gal.Core {
         public static void ToSingleArray(ReadOnlySpan<char> text, ref RefWriter<Single> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? Single.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? Single.Parse(text[..i], NumberStyles.Float, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? Single.Parse(text) : default);
+            writer.Write(text.Length > 0 ? Single.Parse(text, NumberStyles.Float, CultureInfo.InvariantCulture) : default);
         }
 
         public static Single[] ToSingleArray(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<Single> writer = new(stackalloc Single[128]);
+            RefWriter<Single> writer = new(stackalloc Single[32]);
             try {
                 ToSingleArray(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -76,7 +81,7 @@ namespace Gal.Core {
         }
 
         public static void ToSingleArray2D(ReadOnlySpan<char> text, IWriter<Single[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<Single> writer1d = new(stackalloc Single[128]);
+            RefWriter<Single> writer1d = new(stackalloc Single[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -101,7 +106,7 @@ namespace Gal.Core {
         }
 
         public static Single[][] ToSingleArray2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<Single[]> writer = new(128);
+            using Writer<Single[]> writer = new(32);
             ToSingleArray2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }
@@ -109,14 +114,14 @@ namespace Gal.Core {
         public static void ToInt64Array(ReadOnlySpan<char> text, ref RefWriter<Int64> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? Int64.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? Int64.Parse(text[..i], NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? Int64.Parse(text) : default);
+            writer.Write(text.Length > 0 ? Int64.Parse(text, NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
         }
 
         public static Int64[] ToInt64Array(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<Int64> writer = new(stackalloc Int64[128]);
+            RefWriter<Int64> writer = new(stackalloc Int64[32]);
             try {
                 ToInt64Array(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -126,7 +131,7 @@ namespace Gal.Core {
         }
 
         public static void ToInt64Array2D(ReadOnlySpan<char> text, IWriter<Int64[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<Int64> writer1d = new(stackalloc Int64[128]);
+            RefWriter<Int64> writer1d = new(stackalloc Int64[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -151,7 +156,7 @@ namespace Gal.Core {
         }
 
         public static Int64[][] ToInt64Array2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<Int64[]> writer = new(128);
+            using Writer<Int64[]> writer = new(32);
             ToInt64Array2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }
@@ -159,14 +164,14 @@ namespace Gal.Core {
         public static void ToDoubleArray(ReadOnlySpan<char> text, ref RefWriter<Double> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? Double.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? Double.Parse(text[..i], NumberStyles.Number, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? Double.Parse(text) : default);
+            writer.Write(text.Length > 0 ? Double.Parse(text, NumberStyles.Number, CultureInfo.InvariantCulture) : default);
         }
 
         public static Double[] ToDoubleArray(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<Double> writer = new(stackalloc Double[128]);
+            RefWriter<Double> writer = new(stackalloc Double[32]);
             try {
                 ToDoubleArray(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -176,7 +181,7 @@ namespace Gal.Core {
         }
 
         public static void ToDoubleArray2D(ReadOnlySpan<char> text, IWriter<Double[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<Double> writer1d = new(stackalloc Double[128]);
+            RefWriter<Double> writer1d = new(stackalloc Double[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -201,7 +206,7 @@ namespace Gal.Core {
         }
 
         public static Double[][] ToDoubleArray2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<Double[]> writer = new(128);
+            using Writer<Double[]> writer = new(32);
             ToDoubleArray2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }
@@ -209,14 +214,14 @@ namespace Gal.Core {
         public static void ToInt16Array(ReadOnlySpan<char> text, ref RefWriter<Int16> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? Int16.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? Int16.Parse(text[..i], NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? Int16.Parse(text) : default);
+            writer.Write(text.Length > 0 ? Int16.Parse(text, NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
         }
 
         public static Int16[] ToInt16Array(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<Int16> writer = new(stackalloc Int16[128]);
+            RefWriter<Int16> writer = new(stackalloc Int16[32]);
             try {
                 ToInt16Array(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -226,7 +231,7 @@ namespace Gal.Core {
         }
 
         public static void ToInt16Array2D(ReadOnlySpan<char> text, IWriter<Int16[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<Int16> writer1d = new(stackalloc Int16[128]);
+            RefWriter<Int16> writer1d = new(stackalloc Int16[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -251,7 +256,7 @@ namespace Gal.Core {
         }
 
         public static Int16[][] ToInt16Array2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<Int16[]> writer = new(128);
+            using Writer<Int16[]> writer = new(32);
             ToInt16Array2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }
@@ -259,14 +264,14 @@ namespace Gal.Core {
         public static void ToUInt16Array(ReadOnlySpan<char> text, ref RefWriter<UInt16> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? UInt16.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? UInt16.Parse(text[..i], NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? UInt16.Parse(text) : default);
+            writer.Write(text.Length > 0 ? UInt16.Parse(text, NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
         }
 
         public static UInt16[] ToUInt16Array(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<UInt16> writer = new(stackalloc UInt16[128]);
+            RefWriter<UInt16> writer = new(stackalloc UInt16[32]);
             try {
                 ToUInt16Array(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -276,7 +281,7 @@ namespace Gal.Core {
         }
 
         public static void ToUInt16Array2D(ReadOnlySpan<char> text, IWriter<UInt16[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<UInt16> writer1d = new(stackalloc UInt16[128]);
+            RefWriter<UInt16> writer1d = new(stackalloc UInt16[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -301,7 +306,7 @@ namespace Gal.Core {
         }
 
         public static UInt16[][] ToUInt16Array2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<UInt16[]> writer = new(128);
+            using Writer<UInt16[]> writer = new(32);
             ToUInt16Array2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }
@@ -309,14 +314,14 @@ namespace Gal.Core {
         public static void ToByteArray(ReadOnlySpan<char> text, ref RefWriter<Byte> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? Byte.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? Byte.Parse(text[..i], NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? Byte.Parse(text) : default);
+            writer.Write(text.Length > 0 ? Byte.Parse(text, NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
         }
 
         public static Byte[] ToByteArray(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<Byte> writer = new(stackalloc Byte[128]);
+            RefWriter<Byte> writer = new(stackalloc Byte[32]);
             try {
                 ToByteArray(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -326,7 +331,7 @@ namespace Gal.Core {
         }
 
         public static void ToByteArray2D(ReadOnlySpan<char> text, IWriter<Byte[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<Byte> writer1d = new(stackalloc Byte[128]);
+            RefWriter<Byte> writer1d = new(stackalloc Byte[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -351,7 +356,7 @@ namespace Gal.Core {
         }
 
         public static Byte[][] ToByteArray2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<Byte[]> writer = new(128);
+            using Writer<Byte[]> writer = new(32);
             ToByteArray2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }
@@ -359,14 +364,14 @@ namespace Gal.Core {
         public static void ToSByteArray(ReadOnlySpan<char> text, ref RefWriter<SByte> writer, char separator = ';') {
             int i;
             while ((i = text.IndexOf(separator)) != -1) {
-                writer.Write(i > 0 ? SByte.Parse(text[..i]) : default);
+                writer.Write(i > 0 ? SByte.Parse(text[..i], NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
                 text = text[++i..];
             }
-            writer.Write(text.Length > 0 ? SByte.Parse(text) : default);
+            writer.Write(text.Length > 0 ? SByte.Parse(text, NumberStyles.Integer, CultureInfo.InvariantCulture) : default);
         }
 
         public static SByte[] ToSByteArray(ReadOnlySpan<char> text, char separator = ';') {
-            RefWriter<SByte> writer = new(stackalloc SByte[128]);
+            RefWriter<SByte> writer = new(stackalloc SByte[32]);
             try {
                 ToSByteArray(text, ref writer, separator);
                 return writer.writtenSpan.ToArray();
@@ -376,7 +381,7 @@ namespace Gal.Core {
         }
 
         public static void ToSByteArray2D(ReadOnlySpan<char> text, IWriter<SByte[]> writer, char separator1d = ';', char separator2d = '|') {
-            RefWriter<SByte> writer1d = new(stackalloc SByte[128]);
+            RefWriter<SByte> writer1d = new(stackalloc SByte[32]);
             try {
                 int i;
                 while ((i = text.IndexOf(separator2d)) != -1) {
@@ -401,7 +406,7 @@ namespace Gal.Core {
         }
 
         public static SByte[][] ToSByteArray2D(ReadOnlySpan<char> text, char separator1d = ';', char separator2d = '|') {
-            using Writer<SByte[]> writer = new(128);
+            using Writer<SByte[]> writer = new(32);
             ToSByteArray2D(text, writer, separator1d, separator2d);
             return writer.writtenSpan.ToArray();
         }

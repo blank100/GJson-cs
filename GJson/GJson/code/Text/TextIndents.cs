@@ -8,7 +8,7 @@ namespace Gal.Core
 	/// <para>author gouanlin</para>
 	public static class TextIndents
 	{
-		private static readonly List<string> m_Indents = new() {
+		private static readonly List<string> s_Indents = new() {
 			"",
 			"\t",
 			"\t\t",
@@ -21,7 +21,7 @@ namespace Gal.Core
 		};
 
 		public static string GetIndent(int level) {
-			var indents = m_Indents;
+			var indents = s_Indents;
 
 			var l = indents.Count;
 			if (level < l) return indents[level];

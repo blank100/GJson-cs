@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Gal.Core
@@ -9,10 +10,10 @@ namespace Gal.Core
     /// <para>author gouanlin</para>
     public static class TextReplace
     {
-        private static readonly string[] m_Arguments1 = new string[1];
-        private static readonly string[] m_Arguments2 = new string[2];
-        private static readonly string[] m_Arguments3 = new string[3];
-        private static readonly string[] m_Arguments4 = new string[4];
+        private static readonly string[] s_Arguments1 = new string[1];
+        private static readonly string[] s_Arguments2 = new string[2];
+        private static readonly string[] s_Arguments3 = new string[3];
+        private static readonly string[] s_Arguments4 = new string[4];
 
         /// <summary>
         /// 非多线程安全
@@ -22,8 +23,8 @@ namespace Gal.Core
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Replace(ReadOnlySpan<char> text, string argument0) {
-            m_Arguments1[0] = argument0;
-            return Replace(text, m_Arguments1, '{', '}');
+            s_Arguments1[0] = argument0;
+            return Replace(text, s_Arguments1);
         }
 
         /// <summary>
@@ -35,9 +36,9 @@ namespace Gal.Core
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Replace(ReadOnlySpan<char> text, string argument0, string argument1) {
-            m_Arguments2[0] = argument0;
-            m_Arguments2[1] = argument1;
-            return Replace(text, m_Arguments2, '{', '}');
+            s_Arguments2[0] = argument0;
+            s_Arguments2[1] = argument1;
+            return Replace(text, s_Arguments2);
         }
 
         /// <summary>
@@ -50,10 +51,10 @@ namespace Gal.Core
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Replace(ReadOnlySpan<char> text, string argument0, string argument1, string argument2) {
-            m_Arguments3[0] = argument0;
-            m_Arguments3[1] = argument1;
-            m_Arguments3[2] = argument2;
-            return Replace(text, m_Arguments3, '{', '}');
+            s_Arguments3[0] = argument0;
+            s_Arguments3[1] = argument1;
+            s_Arguments3[2] = argument2;
+            return Replace(text, s_Arguments3);
         }
 
         /// <summary>
@@ -67,11 +68,11 @@ namespace Gal.Core
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Replace(ReadOnlySpan<char> text, string argument0, string argument1, string argument2, string argument3) {
-            m_Arguments4[0] = argument0;
-            m_Arguments4[1] = argument1;
-            m_Arguments4[2] = argument2;
-            m_Arguments4[3] = argument3;
-            return Replace(text, m_Arguments4, '{', '}');
+            s_Arguments4[0] = argument0;
+            s_Arguments4[1] = argument1;
+            s_Arguments4[2] = argument2;
+            s_Arguments4[3] = argument3;
+            return Replace(text, s_Arguments4);
         }
 
         /// <summary>
@@ -116,7 +117,7 @@ namespace Gal.Core
                         continue;
                     }
                     var key = text[..i++];
-                    if (int.TryParse(key, out var number) && argCount > number) buffer.Write(arguments[number]);
+                    if (int.TryParse(key, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) && argCount > number) buffer.Write(arguments[number]);
                     else {
                         buffer.Write(prefixDelimiter);
                         buffer.Write(key);

@@ -2,6 +2,10 @@
 
 namespace Gal.Core
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <para>author gouanlin</para>
     public static class CharUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -13,7 +17,7 @@ namespace Gal.Core
             // U+000d = <control> CARRIAGE RETURN	\r
             // U+0085 = <control> NEXT LINE
             // U+00a0 = NO-BREAK SPACE
-            return v == ' ' || v >= '\x0009' && v <= '\x000d' || v == '\x00a0' || v == '\x0085';
+            return v is ' ' or >= '\x0009' and <= '\x000d' or '\x00a0' or '\x0085';
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -27,12 +31,12 @@ namespace Gal.Core
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ToNumber(char x) {
-            switch (x) {
-                case <= '0' and <= '9': return x - '0';
-                case <= 'a' and <= 'f': return x - 'a' + 10;
-            }
-            if (x is >= 'A' and <= 'F') return x - 'A' + 10;
-            throw new("Invalid Character" + x);
+            return x switch {
+                >= '0' and <= '9' => x - '0'
+                , >= 'a' and <= 'f' => x - 'a' + 10
+                , >= 'A' and <= 'F' => x - 'A' + 10
+                , _ => throw new($"Invalid Character {x}")
+            };
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

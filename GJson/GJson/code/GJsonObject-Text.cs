@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Gal.Core.GJson
@@ -9,16 +10,16 @@ namespace Gal.Core.GJson
     /// <para>author gouanlin</para>
     public partial class GJsonObject
     {
-        private static readonly ReadOnlyMemory<char> m_Null = "null".AsMemory();
-        private static readonly ReadOnlyMemory<char> m_True = "true".AsMemory();
-        private static readonly ReadOnlyMemory<char> m_False = "false".AsMemory();
-        private static readonly ReadOnlyMemory<char> m_Undefined = "undefined".AsMemory();
+        private static readonly ReadOnlyMemory<char> s_Null = "null".AsMemory();
+        private static readonly ReadOnlyMemory<char> s_True = "true".AsMemory();
+        private static readonly ReadOnlyMemory<char> s_False = "false".AsMemory();
+        private static readonly ReadOnlyMemory<char> s_Undefined = "undefined".AsMemory();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString() {
             RefWriter<char> buffer = new(stackalloc char[256]);
             try {
-                BuildJsonString(ref buffer, null);
+                BuildJsonString(ref buffer, null, CultureInfo.InvariantCulture);
                 return buffer.writtenSpan.ToString();
             } finally {
                 buffer.Dispose();
@@ -26,21 +27,21 @@ namespace Gal.Core.GJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string ToString(bool format, string numberFormat = null) {
+        public string ToString(bool format, string numberFormat = null, IFormatProvider formatProvider = null) {
             RefWriter<char> buffer = new(stackalloc char[256]);
             try {
-                if (format) BuildJsonStringWithFormat(ref buffer);
-                else BuildJsonString(ref buffer, numberFormat);
+                if (format) BuildJsonStringWithFormat(ref buffer, numberFormat, formatProvider ?? CultureInfo.InvariantCulture);
+                else BuildJsonString(ref buffer, numberFormat, formatProvider ?? CultureInfo.InvariantCulture);
                 return buffer.writtenSpan.ToString();
             } finally {
                 buffer.Dispose();
             }
         }
 
-        private void BuildJsonString(ref RefWriter<char> buffer, string numberFormat) {
+        private void BuildJsonString(ref RefWriter<char> buffer, string numberFormat, IFormatProvider formatProvider) {
             switch (type) {
                 case GJsonType.String:
-                    if (m_String == null) buffer.Write(m_Null);
+                    if (m_String == null) buffer.Write(s_Null);
                     else {
                         buffer.Write('"');
                         TextEscape.Exec(m_String, ref buffer);
@@ -48,10 +49,10 @@ namespace Gal.Core.GJson
                     }
                     break;
                 case GJsonType.Long:
-                    buffer.Write(m_Long.ToString(numberFormat));
+                    buffer.Write(m_Long.ToString(numberFormat, formatProvider));
                     break;
                 case GJsonType.Double:
-                    buffer.Write(m_Double.ToString(numberFormat));
+                    buffer.Write(m_Double.ToString(numberFormat, formatProvider));
                     break;
                 case GJsonType.Object when m_Dict.Count == 0:
                     buffer.Write('{', '}');
@@ -62,7 +63,7 @@ namespace Gal.Core.GJson
                         buffer.Write('"');
                         TextEscape.Exec(key, ref buffer);
                         buffer.Write('"', ':');
-                        value.BuildJsonString(ref buffer, numberFormat);
+                        value.BuildJsonString(ref buffer, numberFormat, formatProvider);
                         buffer.Write(',');
                     }
 
@@ -76,7 +77,7 @@ namespace Gal.Core.GJson
                 case GJsonType.Array: {
                     buffer.Write('[');
                     foreach (var item in m_List) {
-                        item.BuildJsonString(ref buffer, numberFormat);
+                        item.BuildJsonString(ref buffer, numberFormat, formatProvider);
                         buffer.Write(',');
                     }
 
@@ -85,24 +86,25 @@ namespace Gal.Core.GJson
                     break;
                 }
                 case GJsonType.Boolean:
-                    buffer.Write(m_Long != 0 ? m_True : m_False);
+                    buffer.Write(m_Long != 0 ? s_True : s_False);
                     break;
                 case GJsonType.Null:
-                    buffer.Write(m_Null);
+                    buffer.Write(s_Null);
                     break;
                 default:
-                    buffer.Write(m_Undefined);
+                    buffer.Write(s_Undefined);
                     break;
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void BuildJsonStringWithFormat(ref RefWriter<char> buffer, string numberFormat = null) => BuildJsonString(ref buffer, TextIndents.GetIndent(0), 0, numberFormat);
+        private void BuildJsonStringWithFormat(ref RefWriter<char> buffer, string numberFormat = null, IFormatProvider formatProvider = null) =>
+            BuildJsonString(ref buffer, TextIndents.GetIndent(0), 0, numberFormat, formatProvider);
 
-        private void BuildJsonString(ref RefWriter<char> buffer, string indent, int indentLevel, string numberFormat = null) {
+        private void BuildJsonString(ref RefWriter<char> buffer, string indent, int indentLevel, string numberFormat, IFormatProvider formatProvider) {
             switch (type) {
                 case GJsonType.String:
-                    if (m_String == null) buffer.Write(m_Null);
+                    if (m_String == null) buffer.Write(s_Null);
                     else {
                         buffer.Write('"');
                         TextEscape.Exec(m_String, ref buffer);
@@ -110,10 +112,10 @@ namespace Gal.Core.GJson
                     }
                     break;
                 case GJsonType.Long:
-                    buffer.Write(m_Long.ToString(numberFormat));
+                    buffer.Write(m_Long.ToString(numberFormat, formatProvider));
                     break;
                 case GJsonType.Double:
-                    buffer.Write(m_Double.ToString(numberFormat));
+                    buffer.Write(m_Double.ToString(numberFormat, formatProvider));
                     break;
                 case GJsonType.Object when m_Dict.Count == 0:
                     buffer.Write('{', '}');
@@ -129,7 +131,7 @@ namespace Gal.Core.GJson
                         buffer.Write('"');
                         TextEscape.Exec(key, ref buffer);
                         buffer.Write('"', ':');
-                        value.BuildJsonString(ref buffer, childIndent, nextIndentLevel);
+                        value.BuildJsonString(ref buffer, childIndent, nextIndentLevel, numberFormat, formatProvider);
                         buffer.Write(',', '\n');
                     }
 
@@ -149,7 +151,7 @@ namespace Gal.Core.GJson
                     buffer.Write('[', '\n');
                     foreach (var item in m_List) {
                         buffer.Write(childIndent);
-                        item.BuildJsonString(ref buffer, childIndent, nextIndentLevel);
+                        item.BuildJsonString(ref buffer, childIndent, nextIndentLevel, numberFormat, formatProvider);
                         buffer.Write(',', '\n');
                     }
 
@@ -160,13 +162,13 @@ namespace Gal.Core.GJson
                     break;
                 }
                 case GJsonType.Boolean:
-                    buffer.Write(m_Long != 0 ? m_True : m_False);
+                    buffer.Write(m_Long != 0 ? s_True : s_False);
                     break;
                 case GJsonType.Null:
-                    buffer.Write(m_Null);
+                    buffer.Write(s_Null);
                     break;
                 default:
-                    buffer.Write(m_Undefined);
+                    buffer.Write(s_Undefined);
                     break;
             }
         }

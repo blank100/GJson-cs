@@ -60,8 +60,6 @@ namespace Gal.Core
 			return m_Span.Slice(m_Position, count);
 		}
 
-		public void Dispose() {
-			this = default;
-		}
-	}
+        public void Dispose() { this = default; }
+    }
 }

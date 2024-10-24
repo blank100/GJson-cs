@@ -12,9 +12,6 @@ namespace Gal.Core
     /// <typeparam name="T"></typeparam>
     public ref struct RefWriter<T>
     {
-        //默认容量
-        public const int DEFAULT_CAPACITY = 256;
-
         private T[] m_Buffer;
         private Span<T> m_Span;
         private int m_Position;
@@ -114,7 +111,7 @@ namespace Gal.Core
             m_Length = 0;
         }
 
-        public RefWriter(int capacity = DEFAULT_CAPACITY) {
+        public RefWriter(int capacity) {
             Debug.Assert(capacity >= 0, $"The parameter {nameof(capacity)} cannot be negative");
 
             m_Buffer = ArrayPool<T>.Shared.Rent(capacity);
@@ -360,7 +357,7 @@ namespace Gal.Core
         private void GenerateBuffer(int size) {
             var buffer = ArrayPool<T>.Shared.Rent(size);
             m_Span[..Math.Min(m_Length, m_Span.Length)].CopyTo(buffer);
-            if (m_Buffer != null) ArrayPool<T>.Shared.Return(m_Buffer);
+            if (m_Buffer != null) ArrayPool<T>.Shared.Return(m_Buffer, !typeof(T).IsValueType);
             m_Span = m_Buffer = buffer;
         }
 
@@ -399,7 +396,7 @@ namespace Gal.Core
             var availableSize = m_Span.Length - m_Position;
             if (availableSize < sizeHint) GrowBuffer(sizeHint - availableSize);
             else if (m_Buffer == null) GenerateBuffer(m_Span.Length);
-            return m_Buffer.AsMemory(m_Position, sizeHint);
+            return m_Buffer.AsMemory(m_Position);
         }
 
         /// <summary>
@@ -413,7 +410,7 @@ namespace Gal.Core
             if (sizeHint == 0) return m_Span.Slice(m_Position);
             var availableSize = m_Span.Length - m_Position;
             if (availableSize < sizeHint) GrowBuffer(sizeHint - availableSize);
-            return m_Span.Slice(m_Position, sizeHint);
+            return m_Span[m_Position..];
         }
 
         /// <summary>
@@ -433,7 +430,7 @@ namespace Gal.Core
         public void Dispose() {
             var buffer = m_Buffer;
             this = default;
-            if (buffer != null) ArrayPool<T>.Shared.Return(buffer);
+            if (buffer != null) ArrayPool<T>.Shared.Return(buffer, !typeof(T).IsValueType);
         }
     }
 }

@@ -1,19 +1,21 @@
 using System;
-using System.Diagnostics;
-using System.Buffers;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Gal.Core.GJson
 {
     public partial class GJsonObject
     {
+        private const NumberStyles LONG_NUMBER_STYLES = NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
+        private const NumberStyles DOUBLE_NUMBER_STYLES = LONG_NUMBER_STYLES | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent;
+
         public static GJsonObject Decode(string jsonString) => Decode(jsonString.AsSpan());
 
         public static unsafe GJsonObject Decode(ReadOnlySpan<char> jsonChars) {
             GJsonObject root = null;
             fixed (char* start = jsonChars) {
-                 using Stack<GJsonObject> stack = new();
-                using Stack<string> attrNameStack = new();
+                using RefStack<GJsonObject> stack = new();
+                using RefStack<string> attrNameStack = new();
                 var buffer = new RefWriter<char>(stackalloc char[256]);
 
                 var current = start;
@@ -116,10 +118,7 @@ namespace Gal.Core.GJson
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe string GetErrorBlock(char* start, char* current, char* end) {
-            var s = (int)Math.Max(0, current - start - 50);
-            return new(start, s, Math.Min(100, (int)(end - s)));
-        }
+        private static unsafe string GetErrorBlock(char* start, char* current, char* end) => new(start, (int)Math.Max(0, current - start - 50), Math.Min(100, (int)(end - start)));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void DecodeComment(ref char* current, char* end) {
@@ -189,16 +188,21 @@ namespace Gal.Core.GJson
             var isDouble = false;
             while (current <= end) {
                 var c = *current++;
-                if (char.IsDigit(c) || c is '+' or '-' or 'e' or 'E') continue;
-                if (c is not '.') break;
-                isDouble = true;
+                if (char.IsDigit(c) || c is '+' or '-') continue;
+                if (c is '.' or 'e' or 'E') isDouble = true;
+                else break;
             }
 
             var slice = new ReadOnlySpan<char>(s, (int)(--current - s));
-            if (!isDouble) return new(long.Parse(slice));
-            var result = double.Parse(slice);
-            var longValue = (long)result;
-            return Number.Equals(result, longValue) ? new(longValue) : new(result);
+            if (!isDouble)
+                return long.TryParse(slice, LONG_NUMBER_STYLES, CultureInfo.InvariantCulture, out var t) ?
+                    new(t) :
+                    throw new($"Decode long fail: text:{new string(slice)}");
+            else {
+                if (!double.TryParse(slice, DOUBLE_NUMBER_STYLES, CultureInfo.InvariantCulture, out var t)) throw new($"Decode double fail: text:{new string(slice)}");
+                var l = (long)t;
+                return Number.Equals(t, l) ? new(l) : new(t);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -217,58 +221,6 @@ namespace Gal.Core.GJson
         private static unsafe GJsonObject DecodeNull(ref char* current, char* end) {
             if (end - current < 3 || *current++ != 'u' || *current++ != 'l' || *current++ != 'l') throw new("语法错误");
             return new(GJsonType.Null);
-        }
-
-        private class Stack<T> : IDisposable
-        {
-            private const int DEFAULT_CAPACITY = 8;
-
-            private T[] m_Array;
-            private int m_Depth;
-
-            public Stack(int capacity = DEFAULT_CAPACITY) {
-                Debug.Assert(capacity > 0, $"Parameter 'capacity' cannot be negative, capacity:{capacity}");
-                m_Array = ArrayPool<T>.Shared.Rent(capacity);
-                m_Depth = 0;
-            }
-
-            public void Clear() {
-                Array.Clear(m_Array, 0, m_Depth);
-                m_Depth = 0;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public T Peek(int i = 0) {
-                Debug.Assert(m_Depth > 0, "Is empty");
-                Debug.Assert(i >= 0, $"Parameter 'i' cannot be negative, i:{i}");
-                Debug.Assert(i < m_Depth, "Parameter 'I' cannot be greater than or equal to the depth of the stack");
-                return m_Array[m_Depth - 1 - i];
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Push(T item) {
-                if (m_Depth == m_Array.Length) {
-                    var newArray = ArrayPool<T>.Shared.Rent(Math.Max(DEFAULT_CAPACITY, 2 * m_Array.Length));
-                    Buffer.BlockCopy(m_Array, 0, newArray, 0, m_Depth);
-                    m_Array = newArray;
-                }
-
-                m_Array[m_Depth++] = item;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public T Pop() {
-                Debug.Assert(m_Depth > 0, "Is empty");
-                var item = m_Array[--m_Depth];
-                m_Array[m_Depth] = default;
-                return item;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public void Dispose() {
-                ArrayPool<T>.Shared.Return(m_Array);
-                m_Array = null;
-            }
         }
     }
 }
