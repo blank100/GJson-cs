@@ -1,0 +1,90 @@
+# ===============================
+# EditorConfig is awesome
+# ===============================
+root = true
+
+# ===============================
+# C# files
+# ===============================
+[*.cs]
+
+# --------------------------------
+# Indentation & whitespace
+# --------------------------------
+indent_style = space
+indent_size = 4
+tab_width = 4
+end_of_line = crlf
+charset = utf-8-bom
+insert_final_newline = true
+tri_trailing_whitespace = true
+
+# 最大行宽（字符数）
+max_line_length = 200
+
+# 当类型可以推断时，使用 new()
+dotnet_diagnostic.IDE0090.severity = suggestion
+
+# --------------------------------
+# New line / brace style
+# Microsoft-style braces on same line
+# --------------------------------
+
+# 核心：控制 { 是否换行
+csharp_new_line_before_open_brace = none
+
+# 以下是官方推荐的细分规则（显式写出，避免工具差异）
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+csharp_new_line_before_members_in_object_initializers = false
+csharp_new_line_before_members_in_anonymous_types = false
+csharp_new_line_between_query_expression_clauses = true
+
+# Prefer target-typed new expressions
+csharp_style_prefer_target_typed_new_expressions = true:suggestion
+
+# --------------------------------
+# Statement formatting
+# --------------------------------
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = one_less_than_current
+
+# --------------------------------
+# Expression-level preferences
+# --------------------------------
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:suggestion
+
+csharp_style_expression_bodied_methods = true:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+
+# --------------------------------
+# Parentheses clarity (Microsoft default)
+# --------------------------------
+csharp_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:suggestion
+csharp_style_parentheses_in_relational_binary_operators = always_for_clarity:suggestion
+csharp_style_parentheses_in_other_binary_operators = always_for_clarity:suggestion
+csharp_style_parentheses_in_other_operators = never_if_unnecessary:suggestion
+
+# --------------------------------
+# Using directives
+# --------------------------------
+dotnet_sort_syste_directives_first = true
+dotnet_separate_import_directive_groups = false
+
+# --------------------------------
+# Naming (basic Microsoft default)
+# --------------------------------
+dotnet_naming_rule.interface_should_be_prefixed.severity = suggestion
+dotnet_naming_rule.interface_should_be_prefixed.symbols = interface
+dotnet_naming_rule.interface_should_be_prefixed.style = interface_prefix
+
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected
+
+dotnet_naming_style.interface_prefix.required_prefix = I
+dotnet_naming_style.interface_prefix.capitalization = pascal_case

@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <ImplicitUsings>disable</ImplicitUsings>
+        <RootNamespace>Gal.Core</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>10</LangVersion>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <Nullable>disable</Nullable>
-        <LangVersion>default</LangVersion>
         <TargetFramework>netstandard2.1</TargetFramework>
     </PropertyGroup>
 
@@ -18,48 +20,4 @@
     <ItemGroup>
       <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="code\GJsonBinary.cs" />
-      <Compile Remove="code\Text\StringToArray.cs" />
-      <Compile Remove="code\Text\StringToNumber.cs" />
-      <Compile Remove="code\Numerics\Fixed32.cs" />
-      <Compile Remove="code\Numerics\Fixed64.cs" />
-      <Compile Remove="code\Buffer\Primitives\**" />
-      <Compile Remove="code\Numerics\Easing.cs" />
-      <Compile Remove="code\Numerics\ByteUtils.cs" />
-      <Compile Remove="code\Buffer\Ref\RefReader.Bytes.cs" />
-      <Compile Remove="code\Buffer\Ref\RefWriter.Bytes.cs" />
-      <Compile Remove="code\Sort\PdqSortHelper_Unguarded.cs" />
-      <Compile Remove="code\Sort\PdqSortHelper_Unmanaged.cs" />
-      <Compile Remove="code\Sort\FuzzyBinarySearch.cs" />
-      <Compile Remove="code\Sort\PdqKvSorter.cs" />
-      <Compile Remove="code\Sort\PdqSortHelper.cs" />
-      <Compile Remove="code\Buffer\Reader.cs" />
-      <Compile Remove="code\Sort\HeapSortHelper.cs" />
-      <Compile Remove="code\Buffer\Buffer.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="code\Text\StringToArray.tt" />
-      <None Remove="code\Buffer\Primitives\**" />
-      <None Remove="code\Buffer\IReader.Bytes.tt" />
-      <None Remove="code\Buffer\IWriter.Bytes.tt" />
-      <None Remove="code\Buffer\Ref\RefReader.Bytes.tt" />
-      <None Remove="code\Buffer\Ref\RefWriter.Bytes.tt" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="code\Buffer\Primitives\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="code\Sort\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="code\Buffer\IReader.Bytes.tt" />
-      <Content Include="code\Buffer\IWriter.Bytes.tt" />
-    </ItemGroup>
-
 </Project>

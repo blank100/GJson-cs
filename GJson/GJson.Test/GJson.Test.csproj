@@ -38,4 +38,13 @@
     <ItemGroup>
       <ProjectReference Include="..\GJson\GJson.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="JsonBinaryFile1Test.cs" />
+      <Compile Remove="JsonBinaryFile2Test.cs" />
+      <Compile Remove="JsonBinaryFile3Test.cs" />
+      <Compile Remove="JsonBinaryFile4Test.cs" />
+      <Compile Remove="JsonBinaryTest.cs" />
+      <Compile Remove="JsonDecodeTest.cs" />
+    </ItemGroup>
 </Project>

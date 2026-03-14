@@ -13,7 +13,7 @@ namespace Json.Test {
 		public static void NullString() {
 			string      text = null;
 			GJsonObject json = text;
-			Assert.True(json.isNull);
+			Assert.True(json.IsNull);
 			Assert.Equal("null", json.ToString());
 		}
 
@@ -22,7 +22,7 @@ namespace Json.Test {
 			string      text = null;
 			GJsonObject json = new();
 			json["child"] = text;
-			Assert.True(json["child"].isNull);
+			Assert.True(json["child"].IsNull);
 			Assert.Equal("{\"child\":null}", json.ToString());
 		}
 
@@ -31,16 +31,16 @@ namespace Json.Test {
 			GJsonObject json = new();
 
 			json["child"] = null;
-			Assert.False(json.HasChild("child"));
-			Assert.Equal(0, json.count);
+			Assert.True(json.HasChild("child"));
+			Assert.Equal(1, json.Count);
 
 			json["child"] = "this is child";
 			Assert.True(json.HasChild("child"));
-			Assert.Equal(1, json.count);
+			Assert.Equal(1, json.Count);
 
 			json["child"] = null; //删除 child 节点
-			Assert.False(json.HasChild("child"));
-			Assert.Equal(0, json.count);
+			Assert.True(json.HasChild("child"));
+			Assert.Equal(1, json.Count);
 		}
 
 		[Fact]
@@ -80,8 +80,8 @@ namespace Json.Test {
 			//bool
 			{
 				GJsonObject json = false;
-				Assert.Equal(GJsonType.Boolean, json.type);
-				Assert.True(json.isBoolean);
+				Assert.Equal(GJsonType.Boolean, json.Type);
+				Assert.True(json.IsBoolean);
 
 				bool v = json;
 				Assert.False(v);
@@ -90,7 +90,7 @@ namespace Json.Test {
 			//int
 			{
 				GJsonObject json = 1;
-				Assert.True(json.isNumber);
+				Assert.True(json.IsNumber);
 
 				var v = (int) json;
 				Assert.Equal(1, v);
@@ -99,7 +99,7 @@ namespace Json.Test {
 			//long
 			{
 				GJsonObject json = 100L;
-				Assert.True(json.isNumber);
+				Assert.True(json.IsNumber);
 				Assert.Equal<long>(100L, json);
 
 				long v = json;
@@ -109,7 +109,7 @@ namespace Json.Test {
 			//double
 			{
 				GJsonObject json = 100.0D;
-				Assert.True(json.isNumber);
+				Assert.True(json.IsNumber);
 				Assert.Equal<double>(100D, json);
 
 				double v = json;
@@ -119,7 +119,7 @@ namespace Json.Test {
 			//string
 			{
 				GJsonObject json = "this is text";
-				Assert.True(json.isString);
+				Assert.True(json.IsString);
 				Assert.Equal("this is text",json);
 
 				string v = json;

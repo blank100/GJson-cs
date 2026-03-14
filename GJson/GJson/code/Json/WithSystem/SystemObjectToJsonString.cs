@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
@@ -8,7 +7,7 @@ namespace Gal.Core.GJson
     /// <summary>
     /// 将C#原生对象转换为 Json 字符串
     /// </summary>
-    /// <para>author gouanlin</para>
+    /// <author>gouanlin</author>
     /// <para>IDictionary = JsonObject</para>
     /// <para>ICollection = JsonArray</para>
     /// <para>string = string</para>
@@ -32,7 +31,7 @@ namespace Gal.Core.GJson
             try {
                 if (withFormat) Object2Json(self, ref writer, numberFormat, formatProvider ?? CultureInfo.InvariantCulture, TextIndents.GetIndent(0), 1);
                 else Object2Json(self, ref writer, numberFormat, formatProvider, null, 0);
-                return writer.writtenSpan.ToString();
+                return writer.WrittenSpan.ToString();
             } finally {
                 writer.Dispose();
             }
@@ -105,7 +104,7 @@ namespace Gal.Core.GJson
                     Object2Json(itr.Current, ref writer, numberFormat, formatProvider, indent, indentLevel);
                     writer.Write(',');
                 }
-                writer.length--;
+                writer.Length--;
             } else {
                 var nextIndentLevel = indentLevel + 1;
                 var childIndent = TextIndents.GetIndent(nextIndentLevel);
@@ -117,7 +116,7 @@ namespace Gal.Core.GJson
                     Object2Json(itr.Current, ref writer, numberFormat, formatProvider, childIndent, nextIndentLevel);
                     writer.Write(',', '\n');
                 }
-                writer.length -= 2;
+                writer.Length -= 2;
                 writer.Write('\n');
                 writer.Write(indent);
             }
@@ -141,7 +140,7 @@ namespace Gal.Core.GJson
                     Object2Json(e.Value, ref writer, numberFormat, formatProvider, indent, indentLevel);
                     writer.Write(',');
                 }
-                writer.length--;
+                writer.Length--;
             } else {
                 var nextIndentLevel = indentLevel + 1;
                 var childIndent = TextIndents.GetIndent(nextIndentLevel);
@@ -157,7 +156,7 @@ namespace Gal.Core.GJson
                     Object2Json(e.Value, ref writer, numberFormat, formatProvider, childIndent, nextIndentLevel);
                     writer.Write(',', '\n');
                 }
-                writer.length -= 2;
+                writer.Length -= 2;
                 writer.Write('\n');
                 writer.Write(indent);
             }

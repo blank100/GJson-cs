@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace Gal.Core
+﻿namespace Gal.Core
 {
 	/// <summary>
 	/// 缩进符
 	/// </summary>
-	/// <para>author gouanlin</para>
+	/// <author>gouanlin</author>
 	public static class TextIndents
 	{
-		private static readonly List<string> s_Indents = new() {
+		private static readonly List<string> Indents = new() {
 			"",
 			"\t",
 			"\t\t",
@@ -21,7 +19,7 @@ namespace Gal.Core
 		};
 
 		public static string GetIndent(int level) {
-			var indents = s_Indents;
+			var indents = Indents;
 
 			var l = indents.Count;
 			if (level < l) return indents[level];

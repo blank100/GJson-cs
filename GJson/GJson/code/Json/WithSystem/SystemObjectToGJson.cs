@@ -4,7 +4,7 @@ namespace Gal.Core.GJson
 {
 	/// <summary>
 	/// 将C#原生对象转换为 GJsonObject 对象
-	/// <para>author gouanlin</para>
+	/// <author>gouanlin</author>
 	/// <para>IDictionary = JsonObject</para>
 	/// <para>ICollection = JsonArray</para>
 	/// <para>string = string</para>

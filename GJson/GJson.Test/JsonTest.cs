@@ -23,14 +23,14 @@ namespace GalCoreUnitTest.Classes {
 			data.Add(3);
 			data.Add("Launch!");
 
-			Assert.True(data.isArray);
+			Assert.True(data.IsArray);
 			Assert.Equal("[1,2,3,\"Launch!\"]", data.ToString());
 		}
 
 		[Fact]
 		public void AsBooleanTest() {
 			GJsonObject data = true;
-			Assert.True(data.isBoolean);
+			Assert.True(data.IsBoolean);
 			Assert.True((bool) data);
 			Assert.Equal("true", data.ToString());
 
@@ -43,12 +43,12 @@ namespace GalCoreUnitTest.Classes {
 		[Fact]
 		public void AsDoubleTest() {
 			GJsonObject data = 3e6;
-			Assert.True(data.isNumber);
+			Assert.True(data.IsNumber);
 			Assert.Equal(3e6,       (double) data);
 			Assert.Equal("3000000", data.ToString());
 
 			data = 3.14;
-			Assert.True(data.isNumber);
+			Assert.True(data.IsNumber);
 			Assert.Equal(3.14,   (double) data);
 			Assert.Equal("3.14", data.ToString());
 
@@ -61,13 +61,13 @@ namespace GalCoreUnitTest.Classes {
 		[Fact]
 		public void AsIntTest() {
 			GJsonObject data = 13;
-			Assert.True(data.isNumber);
+			Assert.True(data.IsNumber);
 			Assert.Equal(13,   (int) data);
 			Assert.Equal("13", data.ToString());
 
 			data = -00500;
 
-			Assert.True(data.isNumber);
+			Assert.True(data.IsNumber);
 			Assert.Equal(-500,   (int) data);
 			Assert.Equal("-500", data.ToString());
 
@@ -86,7 +86,7 @@ namespace GalCoreUnitTest.Classes {
 			data["font"]["size"]  = 10;
 			data["font"]["color"] = "#fff";
 
-			Assert.True(data.isObject);
+			Assert.True(data.IsObject);
 
 			const string json = "{\"alignment\":\"left\",\"font\":{" + "\"name\":\"Arial\",\"style\":\"italic\",\"size\":10," + "\"color\":\"#fff\"}}";
 
@@ -96,7 +96,7 @@ namespace GalCoreUnitTest.Classes {
 		[Fact]
 		public void AsStringTest() {
 			GJsonObject data = "All you need is love";
-			Assert.True(data.isString);
+			Assert.True(data.IsString);
 			Assert.Equal("All you need is love",     (string) data);
 			Assert.Equal("\"All you need is love\"", data.ToString());
 		}

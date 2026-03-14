@@ -5,7 +5,7 @@ namespace Gal.Core
     /// <summary>
     /// 
     /// </summary>
-    /// <para>author gouanlin</para>
+    /// <author>gouanlin</author>
     public static class CharUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
